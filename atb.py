@@ -4,7 +4,7 @@ from datetime import datetime, timezone, timedelta
 
 ROWS = 3
 
-payload ={'lang':'no', 'from':'Odenseveien (Trondheim)', 'to':'Sentrum (Trondheim)', 'direction':'1'}
+payload ={'from':'Odenseveien (Trondheim)', 'to':'Sentrum (Trondheim)'}
 link = 'https://rp.atb.no/scripts/TravelMagic/TravelMagicWE.dll/svar'
 r = requests.get(link, params=payload)
 
