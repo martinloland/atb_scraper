@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup as soup
-from datetime import datetime, timezone, timedelta, date, time
-from time import gmtime, strftime
+from datetime import datetime, timezone, timedelta
 
 ROWS = 3
 
