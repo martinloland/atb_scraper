@@ -17,6 +17,7 @@ def arrival_time(planned_time, new_time):
 		return planned_time.rstrip()
 
 ROWS = 3
+SUCCESSFUL_REQUEST_CODE = 200
 
 payload ={'from':'Odenseveien (Trondheim)', 'to':'Sentrum (Trondheim)'}
 link = 'https://rp.atb.no/scripts/TravelMagic/TravelMagicWE.dll/svar'
@@ -25,7 +26,7 @@ r = requests.get(link, params=payload)
 delta = timedelta(seconds=60*60*2) #Two hours
 now = datetime.now(timezone.utc)+delta
 
-if r.status_code is 200:
+if r.status_code is SUCCESSFUL_REQUEST_CODE:
 	soup = soup(r.content, 'html.parser')
 	planlagte_tider = soup.findAll('span', {'class':'tm-rf-planlagt'})[::2]
 	nye_tider = soup.findAll('span', {'class':'tm-rf-nytid'})[::2]
