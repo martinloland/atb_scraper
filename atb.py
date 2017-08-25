@@ -17,7 +17,7 @@ if r.status_code is 200:
 	busser = soup.findAll('span', {'class':'tm-det-linenr'})[:3]
 
 	print('\nOdenseveien, mot sentrum\n')
-	print('{:10}{:5}\n{}'.format('Avgang', 'Buss','-'*15))
+	print('{:>5}{:>10}\n{}'.format('Rute', 'Avgang','-'*15))
 
 	for plan, ny, buss in zip(planlagte_tider, nye_tider, busser):
 		if ny.text.rstrip() != '':
@@ -32,7 +32,7 @@ if r.status_code is 200:
 		if remaining_min <= 15:
 			bus_time = '{} min'.format(remaining_min)
 
-		print('{:>8}{:>5}'.format(bus_time, buss.text.rstrip()))
+		print('{:>5}{:>10}'.format(buss.text.rstrip(), bus_time))
 	print('\n')
 else:
 	raise UserWarning('Error making request, status code: {}'.format(r.status_code))
