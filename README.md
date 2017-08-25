@@ -5,7 +5,9 @@ Vil hente tider for de tre neste avgangene fra en gitt holdeplass til en gitt ho
 
 ## Eksempel på output
 
-```python
+```
+Odenseveien, mot sentrum
+
 Avgang    Ny tid    Buss
 -------------------------
 19:30     19:30     18
