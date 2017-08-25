@@ -8,8 +8,8 @@ Vil hente tider for de tre neste avgangene fra en gitt holdeplass til en gitt ho
 ```
 Odenseveien, mot sentrum
 
-Avgang    Ny tid    Buss
--------------------------
-19:30     19:30     18
-19:40               8
-19:44     19:45     18
+ Rute    Avgang
+---------------
+   18    10 min
+    8    12 min
+   18     21:30
