@@ -1,9 +1,11 @@
-# import Adafruit_CharLCD as LCD
+import time
+import Adafruit_CharLCD as LCD
 # https://github.com/adafruit/Adafruit_Python_CharLCD
 # Adafruit_GPIO:
 # https://github.com/adafruit/Adafruit_Python_GPIO
-
 from scrape import get_departues
+
+
 def get_text_w16(rows):
     text=''
     lines = get_departues(rows)
@@ -14,7 +16,10 @@ def get_text_w16(rows):
             text += '{:<4}{:>12}'.format(line['bus'], line['arrival'])
     return text
 
-print(get_text_w16(rows=2))
+# while True:
+#     print(get_text_w16(rows=2))
+#     time.sleep(30)
+
 
 # # Raspberry Pi pin configuration:
 # lcd_rs        = 27  # Note this might need to be changed to 21 for older revision Pi's.
