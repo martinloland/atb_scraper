@@ -1,5 +1,5 @@
 import requests
-from datetime import datetime, timezone, timedelta
+from datetime import datetime
 
 
 def remaining_minutes(bus_time, now):
