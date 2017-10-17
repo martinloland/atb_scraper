@@ -25,7 +25,11 @@ def get_departues(rows):
     results = []
     SUCCESSFUL_REQUEST_CODE = 200
 
-    payload ={'from':'Odenseveien (Trondheim)', 'to':'Sentrum (Trondheim)'}
+    payload ={
+        'dep1':'1',
+        'from':'16011351',
+        'to':'Sentrum (Trondheim)'
+    }
     link = 'https://rp.atb.no/scripts/TravelMagic/TravelMagicWE.dll/svar'
     r = requests.get(link, params=payload)
 
@@ -33,48 +37,25 @@ def get_departues(rows):
 
     if r.status_code is SUCCESSFUL_REQUEST_CODE:
         soup = soup(r.content, 'html.parser')
-        planned_times = soup.findAll('span', {'class':'tm-rf-planlagt'})[::2]
-        new_times = soup.findAll('span', {'class':'tm-rf-nytid'})[::2]
-        busses = soup.findAll('span', {'class':'tm-det-linenr'})
+        arrival_times = soup.findAll('span', {'class':'tm-departurelist-time'})
+        busses = soup.findAll('strong', {'class':'tm-departurelist-linename'})
 
-
-        for planned, new, bus in zip(planned_times[:rows], new_times[:rows], busses[:rows]):
-            arrival = arrival_time(planned.text, new.text)
+        for bus, bustime in zip(busses[:rows], arrival_times[:rows]):
+            arrival = bustime.text.replace('\n','').replace(' ','')
             remaining = remaining_minutes(arrival, now)
             if remaining <= 15:
                 arrival = '{} min'.format(remaining)
-            results.append({'bus':bus.text.rstrip(), 'arrival':arrival})
+            results.append({'bus': bus.text.rstrip(),
+                            'arrival': arrival.replace('\r','')})
+
     else:
-        raise UserWarning('Error making request, status code: {}'.format(r.status_code))
+        raise UserWarning('Error making request, status code: {}'
+                          .format(r.status_code))
 
     return results
 
 
-
-# ROWS = 3
-# SUCCESSFUL_REQUEST_CODE = 200
-#
-# payload ={'from':'Odenseveien (Trondheim)', 'to':'Sentrum (Trondheim)'}
-# link = 'https://rp.atb.no/scripts/TravelMagic/TravelMagicWE.dll/svar'
-# r = requests.get(link, params=payload)
-#
-# delta = timedelta(seconds=60*60*2) #Two hours
-# now = datetime.now(timezone.utc)+delta
-#
-# if r.status_code is SUCCESSFUL_REQUEST_CODE:
-#     soup = soup(r.content, 'html.parser')
-#     planlagte_tider = soup.findAll('span', {'class':'tm-rf-planlagt'})[::2]
-#     nye_tider = soup.findAll('span', {'class':'tm-rf-nytid'})[::2]
-#     busser = soup.findAll('span', {'class':'tm-det-linenr'})
-#
-#     print('\nOdenseveien, mot sentrum\n\n{:>5}{:>10}\n{}'.format('Rute', 'Avgang','-'*15))
-#
-#     for plan, ny, buss in zip(planlagte_tider[:ROWS], nye_tider[:ROWS], busser[:ROWS]):
-#         arrival = arrival_time(plan.text, ny.text)
-#         remaining = remaining_minutes(arrival)
-#         if remaining <= 15:
-#             arrival = '{} min'.format(remaining)
-#         print('{:>5}{:>10}'.format(buss.text.rstrip(), arrival))
-#     print('\n')
-# else:
-#     raise UserWarning('Error making request, status code: {}'.format(r.status_code))
+if __name__ == "__main__":
+    results = get_departues(3)
+    for res in results:
+        print(res)
