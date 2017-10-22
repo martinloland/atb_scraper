@@ -1,4 +1,4 @@
-import time, sys, platform
+import time, sys, platform, datetime
 if platform.system() is not 'Windows':
     import Adafruit_CharLCD as LCD
 
@@ -25,6 +25,7 @@ def get_text_w16(rows):
             text += '{:<4}{:>12}'.format(line['bus'], line['arrival'])
     return text
 
+
 def setup_lcd():
     # Raspberry Pi pin configuration:
     lcd_rs        = 26
@@ -45,19 +46,46 @@ def setup_lcd():
     return lcd
 
 
+def log_error(exception):
+    with open('error_log.txt', 'a+') as f:
+        f.write('{} : {}\n'.format(datetime.datetime.now(), exception))
+
+
+def write_to_log(message):
+    with open('error_log.txt', 'a+') as f:
+        f.write('{} : {}\n'.format(datetime.datetime.now(), message))
+
+
+def restart():
+    write_to_log('Restaring...')
+    command = "/usr/bin/sudo /sbin/shutdown -r now"
+    import subprocess
+    process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
+    output = process.communicate()[0]
+    print(output)
+
+
 def main():
+    write_to_log('Started pi')
     debug = decide_debug()
     if not debug:
         lcd = setup_lcd()
         while True:
-            text = get_text_w16(2)
-            lcd.clear()
-            lcd.message(text)
+            try:
+                text = get_text_w16(2)
+                lcd.clear()
+                lcd.message(text)
+            except Exception as e:
+                log_error(e)
+                restart()
             time.sleep(20)
     else:
         while True:
-            text = get_text_w16(2)
-            print(text)
+            try:
+                text = get_text_w16(2)
+                print(text)
+            except Exception as e:
+                log_error(e)
             time.sleep(10)
 
 if __name__ == "__main__":
