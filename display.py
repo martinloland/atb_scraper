@@ -1,4 +1,4 @@
-import time, sys, platform, datetime
+import time, sys, platform, datetime, os
 if platform.system() is not 'Windows':
     import Adafruit_CharLCD as LCD
 
@@ -6,6 +6,9 @@ if platform.system() is not 'Windows':
 # Adafruit_GPIO:
 # https://github.com/adafruit/Adafruit_Python_GPIO
 from scrape import get_departues
+
+SCRIPT_PATH = os.path.dirname(os.path.realpath(__file__))
+LOG_FILENAME = 'error_log.txt'
 
 
 def decide_debug():
@@ -47,12 +50,14 @@ def setup_lcd():
 
 
 def log_error(exception):
-    with open('error_log.txt', 'a+') as f:
+    full_path = os.path.join(SCRIPT_PATH, LOG_FILENAME)
+    with open(full_path, 'a+') as f:
         f.write('{} : {}\n'.format(datetime.datetime.now(), exception))
 
 
 def write_to_log(message):
-    with open('error_log.txt', 'a+') as f:
+    full_path = os.path.join(SCRIPT_PATH, LOG_FILENAME)
+    with open(full_path, 'a+') as f:
         f.write('{} : {}\n'.format(datetime.datetime.now(), message))
 
 
